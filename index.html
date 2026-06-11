@@ -16,11 +16,137 @@
 <body>
 <header>
   <h1>Ansible Notes</h1>
-  <p>Additions, Corrections, and Suggestions welcomed via Slack</p>
+  <p>Additions, Corrections, and Suggestions welcomed</p>
 </header>
 <main>
+<section>
+  <h2>ansible.cfg</h2>
+  <div class="section-info">
+    <h3>Ansible Config</h3>
+    <p>Usually in project's root directory (project specific)</p>
+    <pre class="left-aligned">
+<code>
+  [defaults]
+  inventory = inventory
+  host_key_checking = false
+  remote_user = username
+  
+  [privilege escalation] <sup title="Section not necessary/recommended">&#128712;</sup>
+  become = true
+  become_user = root
+  become_method = sudo 
+</code>
+    </pre>
+    <p><span class="command">ansible --version</span>Shows which ansible.cfg is being used amongst other info</p>
+  </div>
+</section>
 
+<section>
+  <h2>inventory</h2>
+  <div class="section-info">
+    <h3>Inventory File</h3>
+    <p>Usually in project's root directory (project specific)</p>
+    <pre class="left-aligned">
+<code>
+  vm9
 
+  [webservers]
+  vm1
+  vm8
+
+  [dbservers]
+  vm2
+  vm3
+  vm5
+  vm6
+
+  [test]
+  vm4
+  v7
+
+  [production:children]
+  webservers
+  dbservers
+</code>
+    </pre>
+    <p><span class="command">ansible-inventory --graph</span>List inventory as ASCII tree structure</p>
+    <p><span class="command">ansible-inventory --list</span>List inventory as JSON</p>
+  </div>
+</section>
+
+ <section>
+  <h2>Ad hoc Commands</h2>
+  <div class="section-info">
+    <h3>Common commands</h3>
+  
+    <p><span class="command">ansible <small>HOSTS</small> -m ping</span>Test connectivity to managed nodes</p>
+    <p><span class="command">ansible <small>HOSTS</small> -a "<small>REMOTE_COMMAND</small>"</span>Execute cli commands</p>
+    <p><span class="command">ansible <small>HOSTS</small> -m shell -a "<small>REMOTE_COMMAND</small>"</span>Execute cli commands when above doesn't work. Sometimes the terminal shell is necessary for the command to run</p>
+  </div>
+</section>
+
+<section>
+  <h2>Playbook Header</h2>
+  <div class="section-info">
+    <p>Always be mindful of indentation</p>
+    <pre>
+<code>
+  ---
+  - name: Playbook Header Example
+    hosts: all
+    become: true
+    vars:
+        ...
+    tasks:
+      - name: Task #1
+        ...
+</code>
+    </pre>
+  </div>
+</section>
+
+<section>
+  <h2>Variables</h2>
+  <div class="section-info">
+    <h2>Vars in Playbook Header</h2>
+    <p>Always be mindful of indentation</p>
+    <pre>
+<code>
+  ---
+  ...
+    vars:
+  <em># Single Variables</em>
+      var1: var1_value
+      var2: var2_value
+    
+  <em># Single List (Array)</em>
+      db_users:
+        - user1
+        - user2
+        - user3
+    
+  <em># Single Dictionary</em>
+      db_user_roles:
+        admin: primary
+        readonly: restricted
+        backup_user: system
+    
+  <em># List of Dictionaries</em>
+      db_users_perms:
+        - name: admin
+          privileges: all
+        - name: readonly
+          privileges: select_only
+
+  <!-- <em># Inline Format (Exactly the same data)</em>
+  network_settings: { port: 5432, protocol: tcp, encrypted: true }
+
+  <em>#Inline Dictionary with a List inside</em>
+  db_config: { port: 5432, allowed_hosts: [ 10.0.0.1, 10.0.0.2 ] } -->
+</code>
+    </pre>
+  </div>
+</section>
 
 
 </main>

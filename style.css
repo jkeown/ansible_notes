@@ -24,20 +24,31 @@ section h4{
 h3.empty{
   color: transparent;
 }
-.section-commands{
+.section-info{
   padding: 1rem;
   background: #000000;
   color: #ffffff;
   border-radius: 1rem;
 }
-.section-commands.container{
+.section-info.container{
   container-type: inline-size;
 }
-.section-commands p{
+.section-info p{
   display: grid;
   /* grid-template-columns: 7rem auto; */
   margin-bottom: 1.1rem;
-  opacity: .9;
+  /* opacity: .9; */
+}
+pre{
+  background-color: #e3f2fd; 
+  color: #7200ab; 
+}
+code{
+  /* code blocks need to be leftmost in html to avoid additional css */
+}
+pre code em{
+  color: #008000;
+  font-size: .8rem;
 }
 p.footnote{
   display: inline-block;
@@ -55,6 +66,9 @@ p.footnote{
 }
 .command ~ a:hover{
   color: #ff8811;
+}
+.command > small{
+  font-size: .8rem;
 }
 sup{
   display: none;
