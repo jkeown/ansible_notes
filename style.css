@@ -5,6 +5,14 @@ header{
   text-align: center;
   margin-bottom: 2rem;
 }
+.alert{
+  text-transform: uppercase;
+  color: #c30010;
+  font-weight: bold;
+  letter-spacing: 1px;
+  border-bottom: 1px solid #c30010;
+  display: inline;
+}
 nav ul{
   list-style: none;
 }
@@ -173,7 +181,10 @@ footer h4{
       max-height: 140rem; 
     }
     .dropdown.nav.open .dropdown-content {
-      border: 2px solid black;
+      background-color: #ffffff;
+      box-shadow: 
+        0 12px 30px rgba(0, 0, 0, 0.06), /* Soft depth */
+        0 4px 10px rgba(0, 0, 0, 0.02);  /* Smooth transition */
     }
 
     .dropdown-content-inner {
@@ -183,6 +194,11 @@ footer h4{
 
 /* END Spray Painted Effect */
 
+@media(width >= 500px){
+  .alert{
+    display: none;
+  }
+}
 @media(width >= 744px){
   nav ul{
     display: flex;
