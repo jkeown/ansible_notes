@@ -53,3 +53,16 @@
     });
   });
 })();
+
+// CLOSE NAVIGSTION WHEN LINK CLICKED
+// Select the dropdown container
+const dropdownNav = document.querySelector('.dropdown.nav');
+
+// Listen for clicks inside the dropdown
+dropdownNav.addEventListener('click', (event) => {
+  // Check if the clicked element is a link inside the nav
+  if (event.target.tagName === 'A') {
+    // Remove the open class to close the menu
+    dropdownNav.classList.remove('open');
+  }
+});

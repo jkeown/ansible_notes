@@ -5,6 +5,9 @@ header{
   text-align: center;
   margin-bottom: 2rem;
 }
+nav ul{
+  list-style: none;
+}
 main{
   display: flex;
   flex-wrap: wrap;
@@ -123,7 +126,10 @@ footer h4{
 }
 
 /* DROPDOWN */
-.dropdown {
+.dropdown.nav h2{
+  margin-right: .5rem;
+}
+.dropdown:not(.nav) {
       border: 1px solid #ccc;
       border-radius: 6px;
       overflow: hidden;
@@ -133,13 +139,13 @@ footer h4{
       padding: 15px;
       cursor: pointer;
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
       user-select: none;
       transition: background 0.3s;
     }
 
-    .dropdown-header:hover {
+    .dropdown:not(.nav) .dropdown-header:hover {
       background: hsl(0, 0%, 10%);
     }
 
@@ -159,11 +165,15 @@ footer h4{
       transition: max-height .4s ease;
     }
 
-    .dropdown.open .dropdown-header {
+    .dropdown:not(.nav).open .dropdown-header {
       background: hsl(0, 0%, 10%);
+      color: #ffffff;
     }
     .dropdown.open .dropdown-content {
       max-height: 140rem; 
+    }
+    .dropdown.nav.open .dropdown-content {
+      border: 2px solid black;
     }
 
     .dropdown-content-inner {
@@ -172,6 +182,15 @@ footer h4{
 /* END DROPDOWN */
 
 /* END Spray Painted Effect */
+
+@media(width >= 744px){
+  nav ul{
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+}
 
 @container (width >= 822px) {
   p.initial{
@@ -189,6 +208,9 @@ footer h4{
     display: contents;
     opacity: 1;
     color: #ff8811;
+  }
+  a:hover{
+    border-bottom: 2px solid #832161;
   }
   a.link{
     color: #832161;

@@ -17,17 +17,29 @@
 <header>
   <h1>Ansible Notes</h1>
   <p>Additions, Corrections, and Suggestions welcomed</p>
-  <h2>Links</h2>
-  <ul>
-    <li><a href="">ansible.cfg</a></li>
-    <li><a href="">inventory</a></li>
-    <li><a href="">ad hoc</a></li>
-    <li><a href="">header</a></li>
-    <li><a href="">variables</a></li>
-  </ul>
+
+  <div class="dropdown nav">
+      <div class="dropdown-header">
+        <h2>Links</h2>
+        <span class="arrow">▼</span>
+      </div>
+      <div class="dropdown-content">
+        <div class="dropdown-content-inner">
+          <nav>
+            <ul>
+              <li><a href="#adhoc">ad hoc</a></li>
+              <li><a href="#config">ansible.cfg</a></li>
+              <li><a href="#header">header</a></li>
+              <li><a href="#inventory">inventory</a></li>
+              <li><a href="#vars">variables</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div><!-- dropdown end-->
 </header>
 <main>
-<section>
+<section id="config">
   <h2>ansible.cfg</h2>
   <div class="section-info">
     <h3>Ansible Config</h3>
@@ -49,7 +61,7 @@
   </div>
 </section>
 
-<section>
+<section id="inventory">
   <h2>inventory</h2>
   <div class="section-info">
     <h3>Inventory File</h3>
@@ -82,7 +94,7 @@
   </div>
 </section>
 
- <section>
+ <section id="adhoc">
   <h2>Ad hoc Commands</h2>
   <div class="section-info">
     <h3>Common commands</h3>
@@ -93,7 +105,7 @@
   </div>
 </section>
 
-<section>
+<section id="header">
   <h2>Playbook Header</h2>
   <div class="section-info">
     <p>Always be mindful of indentation</p>
@@ -113,7 +125,7 @@
   </div>
 </section>
 
-<section>
+<section id="vars">
   <h2>Variables</h2>
   <div class="section-info">
     <h2>Vars in Playbook Header</h2>
