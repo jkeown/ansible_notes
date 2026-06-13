@@ -1,38 +1,5 @@
-
-//  (() => {
-//   const dropdown = document.getElementById('dropdown');
-//   if (!dropdown) return;
-  
-//   // Fail gracefully
-//   const header = dropdown.querySelector('.dropdown-header');
-//   if (!header) return;
-
-//   header.addEventListener('click', () => {
-//     dropdown.classList.toggle('open');
-//   });
-// })();
-
-// (() => {
-//   const dropdowns = document.querySelectorAll('.dropdown');
-//   if (!dropdowns.length) return;
-
-//   dropdowns.forEach(dropdown => {
-//     const header = dropdown.querySelector('.dropdown-header');
-//     if (!header) return;
-
-//     header.addEventListener('click', () => {
-//       dropdown.classList.toggle('open');
-//     });
-//   });
-// })();
-
-// Only one dropdown can be open at a time.
-
-// Clicking a different one closes the previous.
-
-// Clicking the same one toggles it normally.
-
 (() => {
+  // 1. DROPDOWN ACCORDION LOGIC
   const dropdowns = document.querySelectorAll('.dropdown');
   if (!dropdowns.length) return;
 
@@ -52,17 +19,34 @@
       dropdown.classList.toggle('open');
     });
   });
-})();
 
-// CLOSE NAVIGSTION WHEN LINK CLICKED
-// Select the dropdown container
-const dropdownNav = document.querySelector('.dropdown.nav');
-
-// Listen for clicks inside the dropdown
-dropdownNav.addEventListener('click', (event) => {
-  // Check if the clicked element is a link inside the nav
-  if (event.target.tagName === 'A') {
-    // Remove the open class to close the menu
-    dropdownNav.classList.remove('open');
+  // 2. CLOSE NAVIGATION WHEN A LINK IS CLICKED
+  const dropdownNav = document.querySelector('.dropdown.nav');
+  if (dropdownNav) { // Defensive check to prevent errors if nav is missing
+    dropdownNav.addEventListener('click', (event) => {
+      if (event.target.tagName === 'A') {
+        dropdownNav.classList.remove('open');
+      }
+    });
   }
-});
+
+  // 3. STICKY BACKGROUND INTERSECTION OBSERVER
+  const anchor = document.querySelector('#scroll-anchor');
+  const nav = document.querySelector('.dropdown.nav');
+
+  // Guard clause: Only run the observer if both elements actually exist on the page
+  if (anchor && nav) {
+    const observer = new IntersectionObserver((entries) => {
+      // Safely using entries[0] matches your updated array syntax
+      if (!entries[0].isIntersecting) {
+        nav.classList.add('at-top'); // Matches your updated CSS class name
+      } else {
+        nav.classList.remove('at-top');
+      }
+    }, {
+      threshold: [0]
+    });
+
+    observer.observe(anchor);
+  }
+})();
