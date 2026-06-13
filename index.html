@@ -29,9 +29,12 @@
             <ul>
               <li><a href="#adhoc">ad hoc</a></li>
               <li><a href="#config">ansible.cfg</a></li>
+              <li><a href="#play-commands">commands/options</a></li>
               <li><a href="#header">header</a></li>
               <li><a href="#inventory">inventory</a></li>
               <li><a href="#vars">variables</a></li>
+              <li><a href="#vars-file">variable files</a></li>
+              <li><a href="#var-snips">variable snippets</a></li>
             </ul>
           </nav>
         </div>
@@ -52,6 +55,7 @@
   inventory = inventory
   host_key_checking = false
   remote_user = username
+  inject_facts_as_vars = False
   
   [privilege escalation] <sup title="Section not necessary/recommended">&#128712;</sup>
   become = true
@@ -106,6 +110,26 @@
     <p><span class="command">ansible <small>HOSTS</small> -m shell -a "<small>REMOTE_COMMAND</small>"</span>Execute cli commands when above doesn't work. Sometimes the terminal shell is necessary for the command to run</p>
     <p><span class="command">ansible <small>HOSTS</small> -m setup -a "filter=<small>ansible_fact</small>" -b</span>Display specific ansible_facts info</p>
     <p><span class="command">ansible <small>HOSTS</small> -m setup -b > facts.txt</span>Saves all facts to text file which can be searched using vi or also "grep -A50 FACT_NAME" which displays the fact and the following 50 lines also (-A50 can be adjusted of course)</p>
+    <p><span class="command">ansible localhost -m setup</span>Gather control node info only</p>
+    <p><span class="command">ansible localhost -m debug -a "var=groups"</span>Displays the contents of the magic variable "groups". <strong>Useful for generating /etc/hosts</strong> <sup title="Even though you target localhost, Ansible still loads your entire inventory file into memory first. This makes it an incredibly fast way to verify that your inventory parsing, group nestings, or dynamic inventory scripts are structured correctly before running a destructive play">&#128712;</sup></p>
+    <p><span class="command">ansible localhost -m debug -a "var=hostvars['<small>host_name</small>']"</span>Display only the variables assigned to the current target node. See <a href="#hostvars">hostvars</a> for more info</p>
+    <p><span class="command">ansible <small>host</small> -m debug -a "var=vars"</span>Display only the variables assigned to the specific target node. Similar to above but simpler</p>
+    <p><span class="command">ansible <small>group</small> -m debug -a "var=vars"</span>Display the variables assigned to an entire group of nodes</p>
+  </div>
+</section>
+
+<section id="play-commands">
+  <h2>Playbook Commands</h2>
+  <div class="section-info">
+    <h3>Commands / Options</h3>
+    <p>Options are run with ansible-playbook ... unless otherwise noted</p>
+    <p><span class="command">--syntax-check</span>Verifies code syntax only. Does not connect to hosts or check runtime variables</p>
+    <p><span class="command">--check or -C</span>Simulates actual execution. Connects to hosts and checks runtime host/group variables</p>
+    <p><span class="command">--start-at-task="<small>task_name</small>"</span>Executes playbook code starting at the specified task.  Argument must match task name exactly</p>
+    <p><span class="command">--tags="<small>tag_name</small>"</span>Runs only the tasks labeled with the specified tag name</p>
+    <p><span class="command">-e "<small>variables</small>"</span>Pass in arguments that override playbook variables.<br> EXAMPLE: -e "http_port=8080"</p>
+    <p><span class="command">--ask-vault-pass</span>Prompt for vault password when running playbook with encrypted data</p>
+    <p><span class="command">--vault-password-file <small>path_to_file</small></span>Specify the vault password file to use when running playbook with encrypted data</p>
   </div>
 </section>
 
@@ -138,6 +162,9 @@
 <code>
   ---
   ...
+    vars_files:
+      variable_file.yml
+
     vars:
   <em># Single Variables</em>
       var1: var1_value
@@ -168,6 +195,48 @@
 
   <em>#Inline Dictionary with a List inside</em>
   db_config: { port: 5432, allowed_hosts: [ 10.0.0.1, 10.0.0.2 ] }
+</code>
+    </pre>
+  </div>
+</section>
+
+<section id="vars-file">
+  <h2>Variable Files</h2>
+  <div class="section-info">
+    <h3></h3>
+    <p>Variables are most often stored under host_vars and group_vars directories. The variable file is named after the group the variables target.<br>Example: The hosts in the inventory file of the group [webservers] will use the variables in group_vars/webservers.yml</p>
+  </div>
+</section>
+
+<section id="var-snips">
+  <h2>Variable Snippets</h2>
+  <div class="section-info">
+    <h3>Often used variables/facts to commit to memory</h3>
+    <p><span class="command">inventory_hostname</span>Exact name of the host as defined in the inventory file. Changes dynamically for each host the playbook runs against. This variable is available even without gather_facts. <strong>Best to use when comparing against "groups" or "hostvars"</strong>rather than ansible_facts['hostname']</p>
+    <p><span class="command">groups['<small>group_name</small>']</span>List of inventory names strictly pulled from the inventory file. It does not know what the actual operating system calls itself.</p>
+    <pre>
+<code>
+  <em># Runs task only when host is part of specified group</em>
+  when: inventory_hostname in groups['GROUP_NAME']
+</code>
+    </pre>
+    <p>Ansible Facts contain data pertaining to the  system, hardware, network, users, storage, filesystems, environment variables, python environment, date, time, virtualization, and custom local facts. <strong>Real-time OS state</strong></p>
+    <p>Following are often used Ansible Facts:<br>(This syntax is legacy and relies on "fact injecting" which can be disabled) <br>
+    ansible_os_family<br>
+    ansible_distribution<br>
+    ansible_default_ipv4.address<br>
+    ansible_hostname</p>
+    <p><strong>The modern way to use the same facts</strong>:<br>
+    ansible_facts['os_family']<br>
+    ansible_facts['distribution']<br>
+    ansible_facts['default_ipv4']['address']<br>
+    ansible_facts['hostname']
+    </p>
+    <p id="hostvars"><strong>Hostvars</strong>:<br>An internal, read-only dictionary stored in the memory of your control node. It contains all variables for all hosts defined anywhere in your project (from host_vars/ files, group_vars/ files, your inventory file, and previously gathered facts if they exist) which are organized by hostname. Because hostvars maps everything together, it allows one host to "peek" into the properties of another host during a playbook run</p>
+    <pre>
+<code>
+  <em># How to reference</em>
+  {{ hostvars['web01']['ansible_facts']['env'] }}
 </code>
     </pre>
   </div>

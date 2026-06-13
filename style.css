@@ -79,12 +79,13 @@ p.footnote{
   text-underline-offset: 7px;
   text-decoration-color: hsla(255, 100%, 100%, 0.5);
 }
-.command ~ a:hover{
+/* .command a:hover{
   color: #ff8811;
-}
-.command > small{
+} */
+.command small{
   font-size: .8rem;
   text-transform: uppercase;
+  font-style: italic;
 }
 sup{
   display: none;
@@ -102,6 +103,13 @@ a.link{
   margin-top: 1rem;
   text-transform: full-width;
   font-weight: 600;
+}
+p a{
+  color: #ff8811;
+  display: contents;
+}
+p a:hover{
+  color: hsl(30, 100%, 40%);
 }
 footer{
   padding: 1rem;
@@ -229,6 +237,7 @@ footer h4{
     display: contents;
     opacity: 1;
     color: #ff8811;
+    font-size: 1.25rem;
   }
   a:hover{
     border-bottom: 2px solid #832161;
