@@ -25,6 +25,9 @@ main{
 section{
   width: 100%;
 }
+section#vars{
+  max-width: 48rem;
+}
 section h2,h3{
   text-align: center;
 }
@@ -53,6 +56,7 @@ h3.empty{
 pre{
   background-color: #e3f2fd; 
   color: #7200ab; 
+  overflow-x: auto;
 }
 code{
   /* code blocks need to be leftmost in html to avoid additional css */
@@ -80,6 +84,7 @@ p.footnote{
 }
 .command > small{
   font-size: .8rem;
+  text-transform: uppercase;
 }
 sup{
   display: none;
@@ -241,7 +246,7 @@ footer h4{
   }
 }
 @media(width>=1500px){
-  section{
+  section:not(#vars){
     flex: 1 0 32%;
     max-width: 33%;
   }

@@ -104,6 +104,8 @@
     <p><span class="command">ansible <small>HOSTS</small> -m ping</span>Test connectivity to managed nodes</p>
     <p><span class="command">ansible <small>HOSTS</small> -a "<small>REMOTE_COMMAND</small>"</span>Execute cli commands</p>
     <p><span class="command">ansible <small>HOSTS</small> -m shell -a "<small>REMOTE_COMMAND</small>"</span>Execute cli commands when above doesn't work. Sometimes the terminal shell is necessary for the command to run</p>
+    <p><span class="command">ansible <small>HOSTS</small> -m setup -a "filter=<small>ansible_fact</small>" -b</span>Display specific ansible_facts info</p>
+    <p><span class="command">ansible <small>HOSTS</small> -m setup -b > facts.txt</span>Saves all facts to text file which can be searched using vi or also "grep -A50 FACT_NAME" which displays the fact and the following 50 lines also (-A50 can be adjusted of course)</p>
   </div>
 </section>
 
@@ -160,11 +162,12 @@
         - name: readonly
           privileges: select_only
 
-  <!-- <em># Inline Format (Exactly the same data)</em>
+          <hr>
+  <em># Inline Dictionary Format</em>
   network_settings: { port: 5432, protocol: tcp, encrypted: true }
 
   <em>#Inline Dictionary with a List inside</em>
-  db_config: { port: 5432, allowed_hosts: [ 10.0.0.1, 10.0.0.2 ] } -->
+  db_config: { port: 5432, allowed_hosts: [ 10.0.0.1, 10.0.0.2 ] }
 </code>
     </pre>
   </div>
