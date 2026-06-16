@@ -36,6 +36,7 @@
               <li><a href="#header">header</a></li>
               <li><a href="#inventory">inventory</a></li>
               <li><a href="#vars">variables</a></li>
+              <li><a href="#custom-vars">custom variables</a></li>
               <li><a href="#vars-file">variable files</a></li>
               <li><a href="#var-snips">variable snippets</a></li>
             </ul>
@@ -199,6 +200,50 @@
   db_config: { port: 5432, allowed_hosts: [ 10.0.0.1, 10.0.0.2 ] }
 </code>
     </pre>
+  </div>
+</section>
+
+<section id="custom-vars">
+  <h2>Variables 2</h2>
+  <div class="section-info">
+    <h3>Custom / Dynamic Variables</h3>
+    <p>Dynamic variables can be set using the ansible.builtin.set_fact module. The variable value will depend on the condition</p>
+    <pre>
+<code>
+  ansible.builtin.set_fact:
+  <em># idiomatic Jinja2 pattern, heavily used in Ansible. (Python ternary)</em>
+    web_port: "{{ '8081' if inventory_hostname in groups['web'] else '2049' }}"
+</code>
+    </pre>
+    <p>Custom Facts are created under /etc/ansible/facts.d on the managed nodes. They can be static files or scripts. Both file types must have the <strong>.fact</strong> extension. JSON format is ideal because it supports nested structures, lists, and booleans cleanly. The file <strong>/etc/ansible/facts.d/my_custom_fact.fact</strong> would be referenced like so:</p>
+    <pre>
+<code>
+  ansible_facts['ansible_local']['my_custom_fact']['custom_key']
+
+  <em># Reference Structure Breakdown</em>
+  {
+  "ansible_facts": {                      <em># 1. Root</em>
+    "ansible_local": {                    <em># 2. Category - namespace Ansible uses to hold custom local facts gathered from the remote target machine</em>
+      "custom_fact": {                    <em># 3. File Name</em>
+        "custom_key": "your_value_here"   <em># 4. Specific Data Point</em>
+        }
+      }
+    }
+  }
+</code>
+    </pre>
+    <p>Custom fact file content example:</p>
+    <pre>
+<code>
+  <em># INI format</em>
+  [settings] <em># arbitrary section header - not needed in JSON format</em>
+  environment=production
+  billing_code=finance-101
+  is_clustered=true
+</code>
+    </pre>
+    <p>If you use the INI format, Ansible treats every value as a raw string. In the INI example, is_clustered=true will be read as the string "true", not a true boolean. If you try to use a conditional like when: ansible_facts['ansible_local']['server_meta']['settings']['is_clustered'], it will not evaluate correctly. For this reason, JSON is heavily preferred.</p>
+    <p>Instead of writing an independent file on the target server, you can use Ansible's built-in set_fact task module (above). This evaluates values dynamically directly inside your runtime playbook memory without dropping files on the managed host</p>
   </div>
 </section>
 
